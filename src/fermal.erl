@@ -4,7 +4,7 @@
 
 
 -define(SERVER, ?MODULE).
--define(API_KEY, "63f8d5e4fa25774a097ac1d299dce5f4").
+-define(API_KEY, "APIKEY").
 -define(API_URL, "http://ws.audioscrobbler.com/2.0/?method=").
 
 %% API
