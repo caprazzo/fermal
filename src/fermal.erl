@@ -2,10 +2,13 @@
 
 -behaviour(gen_server).
 
-%% API
--export([start_link/0]).
 
 -define(SERVER, ?MODULE).
+-define(API_KEY, "63f8d5e4fa25774a097ac1d299dce5f4").
+-define(API_URL, "http://ws.audioscrobbler.com/2.0/?method=").
+
+%% API
+-export([start_link/0, artist_info/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -15,15 +18,16 @@
 
 
 start_link() ->
-    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []),
+    inets:start().
 
 
 init([]) ->
     {ok, #state{}}.
 
 
-handle_call(_Request, _From, State) ->
-    Reply = ok,
+handle_call({artist_info, {Artist}}, _From, State) ->
+    Reply = get_artist_info(Artist),
     {reply, Reply, State}.
 
 
@@ -41,3 +45,32 @@ terminate(_Reason, _State) ->
 
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
+
+artist_info(Artist) ->
+	gen_server:call(?SERVER, {artist_info, {Artist}}).
+
+get_artist_info(Artist) ->
+	FullUrl = ?API_URL ++ "artist.getinfo&format=json&artist=" ++ Artist ++ "&api_key=" ++ ?API_KEY,
+	{ ok, { _Status, _Headers, Body }} = http:request(FullUrl),
+	JsonBody = rfc4627:decode(Body),
+	{ok,
+      {obj,
+       [{"artist",
+         {obj,
+          [{"name",Name},
+           {"mbid",Mbid},
+           {"url",Url},
+           Images,
+           {"streamable",<<"1">>},
+           {"stats",
+            {obj,[{"listeners",StatsListeners},{"playcount",StatsPlayCounts}]}},
+           SimilarArtists,
+           {"bio",
+            {obj,
+             [{"published",BioPublished},
+              {"summary",
+               BioSummary},
+              {"content",
+               BioContent}]}}]}}]},
+               []} = JsonBody,
+    [binary_to_list(Name), binary_to_list(Url), binary_to_list(StatsListeners), binary_to_list(StatsPlayCounts)].
