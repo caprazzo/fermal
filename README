@@ -1,1 +1,12 @@
 A Last.fm API libary for Erlang
+
+Mostly a proof of concept but still usable.
+
+fermal uses Last.fm's JSON output format and LShift's rfc4627 library/parser thingy.
+
+This code is available as Open Source Software under the MIT license.
+
+Details:
+
+http://www.lshift.net/blog/2007/02/17/json-and-json-rpc-for-erlang
+http://www.last.fm/api/
