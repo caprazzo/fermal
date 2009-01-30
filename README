@@ -10,3 +10,47 @@ Details:
 
 http://www.lshift.net/blog/2007/02/17/json-and-json-rpc-for-erlang
 http://www.last.fm/api/
+
+Example Usage:
+
+1> fermal:start().
+ok
+2>  fermal:artist_info("animal%20collective").
+[[artist,
+  {name,"Animal Collective"},
+  {mbid,"0c751690-c784-4a4f-b1e4-c1de27d47581"},
+  {url,"http://www.last.fm/music/Animal+Collective"},
+  {steamable,"1"},
+  {listeners,"382527"},
+  {playcount,"16240956"}],
+	<snip>
+3> fermal:album_info("animal%20collective", "feels").
+[[album,
+  {name,"Feels"},
+  {artist,"Animal Collective"},
+  {id,"2050717"},
+  {mbid,"8a9ee208-3c9e-4fec-8f60-9a8b1db39960"},
+  {url,"http://www.last.fm/music/Animal+Collective/Feels"},
+  {releasedate,"    18 Oct 2005, 00:00"},
+  {listeners,"184794"},
+  {playcount,"3539880"},
+  {toptags,"\n      "}]]
+4> fermal:tasteometer("USERNAME1", "USERNAME2").
+[[result,{score,"0.98008804573955"}],
+ [user,
+  {name,"joanofarctan"},
+  {url,"http://www.last.fm/user/joanofarctan"},
+  {name,"mirandason"},
+  {url,"http://www.last.fm/user/mirandason"}],
+ [artists,
+  [{name,"The Beatles"},
+   {url,"http://www.last.fm/music/The+Beatles"}],
+  [{name,"Bj\303\266rk"},
+   {url,"http://www.last.fm/music/Bj%C3%B6rk"}],
+  [{name,"Iron & Wine"},
+   {url,"http://www.last.fm/music/Iron%2B%2526%2BWine"}],
+  [{name,"Cat Power"},
+   {url,"http://www.last.fm/music/Cat+Power"}],
+  [{name,"PJ Harvey"},
+   {url,"http://www.last.fm/music/PJ+Harvey"}],
+  {matches,"60"}]]
