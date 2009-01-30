@@ -41,9 +41,10 @@
 -define(API_KEY, "63f8d5e4fa25774a097ac1d299dce5f4").
 -define(API_URL, "http://ws.audioscrobbler.com/2.0/?method=").
 -define(FORMAT, "&format=json").
+-define(LIMIT, "&limit=5").
 
 %% API
--export([start_link/0, artist_info/1, tasteometer/2]).
+-export([start/0, artist_info/1, tasteometer/2, album_info/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -56,13 +57,16 @@ start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []),
     inets:start().
 
-
 init([]) ->
     {ok, #state{}}.
 
 
 handle_call({artist_info, {Artist}}, _From, State) ->
     Reply = fermal_artist:get_artist_info(?API_URL ++ "artist.getinfo&artist=" ++ Artist ++ "&api_key=" ++ ?API_KEY ++ ?FORMAT),
+    {reply, Reply, State};
+
+handle_call({album_info, {Artist, Album}}, _From, State) ->
+    Reply = fermal_album:get_album_info(?API_URL ++ "album.getinfo&artist=" ++ Artist ++ "&album=" ++ Album ++"&api_key=" ++ ?API_KEY ++ ?FORMAT),
     {reply, Reply, State};
 
 handle_call({tasteometer, {User1, User2}}, _From, State) ->
@@ -73,7 +77,6 @@ handle_call({tasteometer, {User1, User2}}, _From, State) ->
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
-
 handle_info(_Info, State) ->
     {noreply, State}.
 
@@ -81,12 +84,21 @@ handle_info(_Info, State) ->
 terminate(_Reason, _State) ->
     ok.
 
-
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
 
+%% @doc start gen_server
+start() ->
+	start_link().
+
+%% @doc gets info about an artist
 artist_info(Artist) ->
 	gen_server:call(?SERVER, {artist_info, {Artist}}).
 
+%% @doc compares two users for similar tastes
 tasteometer(User1, User2) ->
 	gen_server:call(?SERVER, {tasteometer, {User1, User2}}).
+
+%% @doc gets info about an album
+album_info(Artist, Album) ->
+	gen_server:call(?SERVER, {album_info, {Artist, Album}}).

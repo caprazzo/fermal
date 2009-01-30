@@ -25,7 +25,7 @@
 %% @copyright 2009 Joseph Williams
 %% @version pre 0.1
 %% @seealso http://www.last.fm/api
-%% @doc A Last.fm API Library for Erlang.
+%% @doc Module for the tasteometer portion of the Last.fm API
 %%
 %% This code is available as Open Source Software under the MIT license.
 %%
@@ -36,12 +36,12 @@
 
 -export([get_tasteometer/1]).
 
+%% @doc retreives and parses an tasteometer request
 get_tasteometer(Url) ->
-	{ ok, { _Status, _Headers, Body }} = http:request(Url),
-	JsonBody = rfc4627:decode(Body),
+	JsonBody = fermal_util:get_body(Url),
 	{ok,{obj,[{"comparison",
            {obj,[{"result",
-                  {obj,[{"score",Score},
+                  {obj,[{"score", Score},
                         {"artists",
                          {obj,[{"artist",
                                 [{obj,[{"name", SharedArtistName1},{"url", SharedArtistUrl1},_SharedArtistImages1]},

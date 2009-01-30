@@ -25,7 +25,7 @@
 %% @copyright 2009 Joseph Williams
 %% @version pre 0.1
 %% @seealso http://www.last.fm/api
-%% @doc A Last.fm API Library for Erlang.
+%% @doc Module for the artist portion of the Last.fm API
 %%
 %% This code is available as Open Source Software under the MIT license.
 %%
@@ -36,9 +36,9 @@
 
 -export([get_artist_info/1]).
 
+%% @doc retreives and parses an artist info request
 get_artist_info(Url) ->
-	{ ok, { _Status, _Headers, Body }} = http:request(Url),
-	JsonBody = rfc4627:decode(Body),
+	JsonBody = fermal_util:get_body(Url),
 	{ok,{obj,[{"artist",
            {obj,[{"name", ArtistName},
                  {"mbid", ArtistMbid},
