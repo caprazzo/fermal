@@ -25,7 +25,7 @@ ok
   {playcount,"16240956"}],
 	<snip>
 3> fermal:album_info("animal%20collective", "feels").
-[[album,
+[album,
   {name,"Feels"},
   {artist,"Animal Collective"},
   {id,"2050717"},
@@ -34,7 +34,7 @@ ok
   {releasedate,"    18 Oct 2005, 00:00"},
   {listeners,"184794"},
   {playcount,"3539880"},
-  {toptags,"\n      "}]]
+  {toptags,"\n      "}]
 4> fermal:tasteometer("USERNAME1", "USERNAME2").
 [[result,{score,"0.98008804573955"}],
  [user,
@@ -54,3 +54,33 @@ ok
   [{name,"PJ Harvey"},
    {url,"http://www.last.fm/music/PJ+Harvey"}],
   {matches,"60"}]]
+2> fermal:venue_search("arena").
+[[results,{searchterms,"arena"},{totalresults,"1354"}],
+ [venuematches,
+  [{id,"8778545"},
+   {name,"Arena"},
+   {url,"http://www.last.fm/venue/8778545"},
+   location,
+   {geopoint,{geolat,"48.187532"},{geolong,"16.413379"}},
+   {city,"Wien"},
+   {country,"Austria"},
+   {street,"Baumgasse 80"},
+   {postalcode,"1030"}],
+  [{id,"8779138"},
+   {name,"Arena"},
+   {url,"http://www.last.fm/venue/8779138"},
+   location,
+   {geopoint,{geolat,"59.3666667"},{geolong,"13.5"}},
+   {city,"Karlstad"},
+   {country,"Sweden"},
+   {street,"Kungsgatan 18"},
+   {postalcode,"65224"}],
+  [{id,"8779309"},
+   {name,"Arena"},
+   {url,"http://www.last.fm/venue/8779309"},
+   location,
+   {geopoint,{geolat,"52.6166667"},{geolong,"10.0833333"}},
+   {city,"Celle"},
+   {country,"Germany"},
+   {street,[]},
+   {postalcode,[]}]]]

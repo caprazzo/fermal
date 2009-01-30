@@ -38,13 +38,13 @@
 
 
 -define(SERVER, ?MODULE).
--define(API_KEY, "API").
+-define(API_KEY, "63f8d5e4fa25774a097ac1d299dce5f4").
 -define(API_URL, "http://ws.audioscrobbler.com/2.0/?method=").
 -define(FORMAT, "&format=json").
--define(LIMIT, "&limit=5").
+-define(LIMIT, "&limit=3").
 
 %% API
--export([start/0, artist_info/1, tasteometer/2, album_info/2]).
+-export([start/0, artist_info/1, tasteometer/2, album_info/2, venue_search/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -65,13 +65,17 @@ handle_call({artist_info, {Artist}}, _From, State) ->
     Reply = fermal_artist:get_artist_info(?API_URL ++ "artist.getinfo&artist=" ++ Artist ++ "&api_key=" ++ ?API_KEY ++ ?FORMAT),
     {reply, Reply, State};
 
+handle_call({tasteometer, {User1, User2}}, _From, State) ->
+    Reply = fermal_tasteometer:get_tasteometer(?API_URL ++ "tasteometer.compare&type1=user&type2=user&value1=" ++ User1
+    	++ "&value2=" ++ User2 ++ "&api_key=" ++ ?API_KEY ++ ?FORMAT),
+    {reply, Reply, State};
+
 handle_call({album_info, {Artist, Album}}, _From, State) ->
     Reply = fermal_album:get_album_info(?API_URL ++ "album.getinfo&artist=" ++ Artist ++ "&album=" ++ Album ++"&api_key=" ++ ?API_KEY ++ ?FORMAT),
     {reply, Reply, State};
 
-handle_call({tasteometer, {User1, User2}}, _From, State) ->
-    Reply = fermal_tasteometer:get_tasteometer(?API_URL ++ "tasteometer.compare&type1=user&type2=user&value1=" ++ User1
-    	++ "&value2=" ++ User2 ++ "&api_key=" ++ ?API_KEY ++ ?FORMAT),
+handle_call({venue_search, {Venue}}, _From, State) ->
+    Reply = fermal_venue:get_venue_search(?API_URL ++ "venue.search&venue=" ++ Venue ++"&api_key=" ++ ?API_KEY ++ ?FORMAT ++ ?LIMIT),
     {reply, Reply, State}.
 
 handle_cast(_Msg, State) ->
@@ -102,3 +106,7 @@ tasteometer(User1, User2) ->
 %% @doc gets info about an album
 album_info(Artist, Album) ->
 	gen_server:call(?SERVER, {album_info, {Artist, Album}}).
+
+%% @doc search for a venue
+venue_search(Venue) ->
+	gen_server:call(?SERVER, {venue_search, {Venue}}).

@@ -51,6 +51,6 @@ get_album_info(Url) ->
                  {"playcount", Playcount},
                  {"toptags", TopTags}]}}]},
     []} = JsonBody,
-    [ [ album, {name, binary_to_list(AlbumTitle)}, {artist, binary_to_list(Artist)}, {id, binary_to_list(Id)},
+    [ album, {name, binary_to_list(AlbumTitle)}, {artist, binary_to_list(Artist)}, {id, binary_to_list(Id)},
     {mbid, binary_to_list(Mbid)}, {url, binary_to_list(ArtistUrl)}, {releasedate, binary_to_list(ReleaseDate)},
-    {listeners, binary_to_list(Listeners)}, {playcount, binary_to_list(Playcount)}, {toptags, binary_to_list(TopTags)} ] ].
+    {listeners, binary_to_list(Listeners)}, {playcount, binary_to_list(Playcount)}, {toptags, binary_to_list(TopTags)} ].
