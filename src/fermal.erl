@@ -44,7 +44,8 @@
 -define(LIMIT, "&limit=3").
 
 %% API
--export([start/0, artist_info/1, tasteometer/2, album_info/2, venue_search/1]).
+-export([start/0, artist_info/1, tasteometer/2, album_info/2,
+		track_info/2, venue_search/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -72,6 +73,10 @@ handle_call({tasteometer, {User1, User2}}, _From, State) ->
 
 handle_call({album_info, {Artist, Album}}, _From, State) ->
     Reply = fermal_album:get_album_info(?API_URL ++ "album.getinfo&artist=" ++ Artist ++ "&album=" ++ Album ++"&api_key=" ++ ?API_KEY ++ ?FORMAT),
+    {reply, Reply, State};
+
+handle_call({track_info, {Artist, Track}}, _From, State) ->
+    Reply = fermal_track:get_track_info(?API_URL ++ "track.getinfo&artist=" ++ Artist ++ "&track=" ++ Track ++"&api_key=" ++ ?API_KEY ++ ?FORMAT),
     {reply, Reply, State};
 
 handle_call({venue_search, {Venue}}, _From, State) ->
@@ -110,3 +115,7 @@ album_info(Artist, Album) ->
 %% @doc search for a venue
 venue_search(Venue) ->
 	gen_server:call(?SERVER, {venue_search, {Venue}}).
+
+%% @doc get track info
+track_info(Artist, Track) ->
+	gen_server:call(?SERVER, {track_info, {Artist, Track}}).
