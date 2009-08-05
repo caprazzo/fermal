@@ -1,4 +1,4 @@
-%% Copyright 2009, Joe Williams <joe@joetify.com>
+%% Copyright 2009, Joe Williams7 <joe@joetify.com>
 %%
 %% Permission is hereby granted, free of charge, to any person
 %% obtaining a copy of this software and associated documentation
@@ -30,11 +30,20 @@
 %% This code is available as Open Source Software under the MIT license.
 %%
 %% Updates at http://github.com/joewilliams/fermal/
-
-
 -module(fermal_artist).
 
--export([get_artist_info/1]).
+-export([get_artist_info/1, get_artist_similar/1]).
+
+%% @doc retrieves similar artists list
+get_artist_similar(Url) ->
+	JsonBody = fermal_util:get_body(Url),
+	{ok,{obj,[{"similarartists",{obj,[{"artist", Similar}, _]}}]},_} = JsonBody,
+	pack_artists(Similar, []).
+
+pack_artists([], Acc) -> lists:reverse(Acc);
+pack_artists([A|Artists], Acc) ->
+	{obj, Artist} = A,
+	pack_artists(Artists, [{artist, Artist}|Acc]).
 
 %% @doc retreives and parses an artist info request
 get_artist_info(Url) ->

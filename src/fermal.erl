@@ -38,14 +38,16 @@
 
 
 -define(SERVER, ?MODULE).
--define(API_KEY, "API").
+-define(API_KEY, "81ea54e9ad93005af93da6d65e25e7d1").
 -define(API_URL, "http://ws.audioscrobbler.com/2.0/?method=").
 -define(FORMAT, "&format=json").
 -define(LIMIT, "&limit=3").
 
 %% API
--export([start/0, artist_info/1, tasteometer/2, album_info/2,
+-export([start/0, artist_info/1, artist_similar/1, tasteometer/2, album_info/2,
 		track_info/2, venue_search/1]).
+
+-export([check/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -66,6 +68,10 @@ handle_call({artist_info, {Artist}}, _From, State) ->
     Reply = fermal_artist:get_artist_info(?API_URL ++ "artist.getinfo&artist=" ++ Artist ++ "&api_key=" ++ ?API_KEY ++ ?FORMAT),
     {reply, Reply, State};
 
+handle_call({artist_similar, {Artist}}, _From, State) ->
+	Reply = fermal_artist:get_artist_similar(?API_URL ++ "artist.getsimilar&artist=" ++ Artist ++ "&api_key=" ++ ?API_KEY ++ ?FORMAT),
+    {reply, Reply, State};
+	
 handle_call({tasteometer, {User1, User2}}, _From, State) ->
     Reply = fermal_tasteometer:get_tasteometer(?API_URL ++ "tasteometer.compare&type1=user&type2=user&value1=" ++ User1
     	++ "&value2=" ++ User2 ++ "&api_key=" ++ ?API_KEY ++ ?FORMAT),
@@ -100,9 +106,16 @@ code_change(_OldVsn, State, _Extra) ->
 start() ->
 	start_link().
 
+check() ->
+	start(),
+	Rx = artist_similar("radiohead").
 %% @doc gets info about an artist
 artist_info(Artist) ->
 	gen_server:call(?SERVER, {artist_info, {Artist}}).
+
+%% @doc get similar artists
+artist_similar(Artist) ->
+	gen_server:call(?SERVER, {artist_similar, {Artist}}).
 
 %% @doc compares two users for similar tastes
 tasteometer(User1, User2) ->
